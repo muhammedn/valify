@@ -4,7 +4,15 @@ from django.utils import timezone
 
 # Create your models here.
 
-class Poll(models.Model):
+class TimeStamps(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
+
+class Poll(TimeStamps):
     poll_title = models.CharField(max_length=191)
     poll_description = models.CharField(max_length=255)
     expiry_date = models.DateTimeField('expiry date')
@@ -16,7 +24,7 @@ class Poll(models.Model):
         return self.expiry_date < timezone.now()
 
 
-class Vote(models.Model):
+class Vote(TimeStamps):
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
     vote_title = models.CharField(max_length=191)
 
