@@ -30,3 +30,9 @@ class Vote(TimeStamps):
 
     def __str__(self):
         return self.vote_title
+
+class PollVote(TimeStamps):
+    poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
+    vote = models.ForeignKey(Vote, on_delete=models.CASCADE)
+
+

@@ -1,13 +1,21 @@
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from .models import Poll, Vote
-from .serializers import PollSerializer,PollsSerializer
+from .serializers import PollSerializer, PollsSerializer
 from rest_framework.decorators import api_view
+from rest_framework import filters
 
 
 @api_view(["GET"])
 def list_polls(request):
-    serialized_polls = PollsSerializer(Poll.objects.all(), many=True)
+    polls = Poll.objects.all().order_by('expiry_date')
+    # if request.query_params.get("search"):
+    #     filter_param = request.query_params.get("search")
+    #     titles = Poll.objects.filter(poll_title__contains=filter_param)
+    #     descriptions = Poll.objects.filter(poll_description__contains=filter_param)
+    #     titles.update(descriptions)
+    #     poll = titles
+    serialized_polls = PollsSerializer(polls, many=True)
     return JsonResponse({'polls': serialized_polls.data}, safe=False)
 
 
